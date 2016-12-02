@@ -2,14 +2,14 @@
 
 menu:
   主页: /
-  随笔: /tags/随笔
+  相册（待续）: /
 
 # SubNav
 subnav:
-  github: "#"
-  weibo: "#"
+  github: "https://github.com/JayGo"
+  weibo: "http://weibo.com/u/1978125520"
   rss: "#"
-  zhihu: "#"
+  zhihu: "https://www.zhihu.com/people/jie-liu-76-40"
   #douban: "#"
   #mail: "mailto:litten225@qq.com"
   #facebook: "#"
@@ -52,14 +52,14 @@ google_analytics: ''
 favicon: /favicon.png
 
 #你的头像url
-avatar:
+avatar: /assets/img/profile.jpg
 
 #是否开启分享
 share_jia: true
 
 #是否开启多说评论，填写你在多说申请的项目名称 duoshuo: duoshuo-key
 #若使用disqus，请在博客config文件中填写disqus_shortname，并关闭多说评论
-duoshuo: false
+duoshuo: true
 
 # 智能菜单
 # 如不需要，将该对应项置为false
@@ -73,11 +73,10 @@ smart_menu:
   aboutme: '关于我'
 
 friends:
-  友情链接1: http://localhost:4000/
-  友情链接2: http://localhost:4000/
-  友情链接3: http://localhost:4000/
-  友情链接4: http://localhost:4000/
-  友情链接5: http://localhost:4000/
-  友情链接6: http://localhost:4000/
+  Litten's Blog: http://litten.me/
+  娱乐-天天美剧: http://www.ttmeiju.com/
+  无聊-WaveSilk: http://weavesilk.com/?odki
+  摄影-500px: https://500px.com/
+  （待续）: "#"
 
-aboutme: 很惭愧<br><br>只做了一点微小的工作<br>谢谢大家
+aboutme: 11's FDUer<br><br>生在彩云中<br>混迹于魔都
