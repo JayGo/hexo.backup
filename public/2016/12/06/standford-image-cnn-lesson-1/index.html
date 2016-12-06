@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <link rel="dns-prefetch" href="http://www.jaylucien.pw">
+  <title>斯坦福机器学习系列课程（一） 图像分类：数据驱动的研究方法 | Lucien同学的窝</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="斯坦福机器学习系列课程（一） 图像分类：数据驱动的研究方法图像分类概念将图像作为输入，然后从固定的分类集合中选择一个标签为其贴上，一般而言，一些突出的计算机视觉任务，例如物体检测、图像分割都可以转化成为图像分类任务。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="斯坦福机器学习系列课程（一） 图像分类：数据驱动的研究方法">
+<meta property="og:url" content="http://www.jaylucien.pw/2016/12/06/standford-image-cnn-lesson-1/index.html">
+<meta property="og:site_name" content="Lucien同学的窝">
+<meta property="og:description" content="斯坦福机器学习系列课程（一） 图像分类：数据驱动的研究方法图像分类概念将图像作为输入，然后从固定的分类集合中选择一个标签为其贴上，一般而言，一些突出的计算机视觉任务，例如物体检测、图像分割都可以转化成为图像分类任务。">
+<meta property="og:image" content="http://7xopvd.com1.z0.glb.clouddn.com/trainset.jpg">
+<meta property="og:image" content="http://7xopvd.com1.z0.glb.clouddn.com/nn.jpg">
+<meta property="og:updated_time" content="2016-12-06T15:49:52.987Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="斯坦福机器学习系列课程（一） 图像分类：数据驱动的研究方法">
+<meta name="twitter:description" content="斯坦福机器学习系列课程（一） 图像分类：数据驱动的研究方法图像分类概念将图像作为输入，然后从固定的分类集合中选择一个标签为其贴上，一般而言，一些突出的计算机视觉任务，例如物体检测、图像分割都可以转化成为图像分类任务。">
+<meta name="twitter:image" content="http://7xopvd.com1.z0.glb.clouddn.com/trainset.jpg">
+  
+    <link rel="alternative" href="/atom.xml" title="Lucien同学的窝" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/main.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+      <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img src="/assets/img/profile.jpg" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">Jay Lucien</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">既然来了 就多逛逛呗 :)</p>
+		
+
+		<nav class="header-menu">
+			<ul>
+			
+				<li><a href="/">主页</a></li>
+	        
+				<li><a href="/">相册（待续）</a></li>
+	        
+			</ul>
+		</nav>
+		<nav class="header-smart-menu">
+	        
+    		
+    			
+    			<a class="js-smart-menu" data-idx="0" href="javascript:void(0)">所有文章</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="1" href="javascript:void(0)">标签</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="2" href="javascript:void(0)">友链</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="3" href="javascript:void(0)">关于我</a>
+    			
+    			
+            
+		</nav>
+		<nav class="header-nav">
+			<div class="social">
+				
+					<a class="github" target="_blank" href="https://github.com/JayGo" title="github"><i class="icon-github"></i></a>
+		        
+					<a class="weibo" target="_blank" href="http://weibo.com/u/1978125520" title="weibo"><i class="icon-weibo"></i></a>
+		        
+					<a class="rss" target="_blank" href="#" title="rss"><i class="icon-rss"></i></a>
+		        
+					<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/jie-liu-76-40" title="zhihu"><i class="icon-zhihu"></i></a>
+		        
+			</div>
+		</nav>
+	</header>		
+</div>
+<!--<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=100% height=36% style="bottom: 2%; position: absolute;" src="http://music.163.com/outchain/player?type=0&id=522476498&auto=0&height=430"></iframe>-->
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"><i class="icon-sort"></i></div>
+  		<h1 class="header-author js-mobile-header hide">Jay Lucien</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				
+					<img src="/assets/img/profile.jpg" class="js-avatar">
+				
+			</div>
+			<hgroup>
+			  <h1 class="header-author">Jay Lucien</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">既然来了 就多逛逛呗 :)</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/">相册（待续）</a></li>
+		        
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/JayGo" title="github"><i class="icon-github"></i></a>
+			        
+						<a class="weibo" target="_blank" href="http://weibo.com/u/1978125520" title="weibo"><i class="icon-weibo"></i></a>
+			        
+						<a class="rss" target="_blank" href="#" title="rss"><i class="icon-rss"></i></a>
+			        
+						<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/jie-liu-76-40" title="zhihu"><i class="icon-zhihu"></i></a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap">
+        <article id="post-standford-image-cnn-lesson-1" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      斯坦福机器学习系列课程（一） 图像分类：数据驱动的研究方法
+    </h1>
+  
+
+        <a href="/2016/12/06/standford-image-cnn-lesson-1/" class="archive-article-date">
+  	<time datetime="2016-12-06T15:29:48.013Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-12-06</time>
+</a>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=429482207&auto=0&height=66"></iframe>
+
+<h3 id="斯坦福机器学习系列课程（一）-图像分类：数据驱动的研究方法"><a href="#斯坦福机器学习系列课程（一）-图像分类：数据驱动的研究方法" class="headerlink" title="斯坦福机器学习系列课程（一） 图像分类：数据驱动的研究方法"></a>斯坦福机器学习系列课程（一） 图像分类：数据驱动的研究方法</h3><h4 id="图像分类"><a href="#图像分类" class="headerlink" title="图像分类"></a>图像分类</h4><p><strong>概念</strong><br>将图像作为输入，然后从固定的分类集合中选择一个标签为其贴上，一般而言，一些突出的计算机视觉任务，例如物体检测、图像分割都可以转化成为图像分类任务。<br><a id="more"></a></p>
+<p><strong>举个栗子</strong><br>现在我有一幅图片，然后准备了4中分类标签：猫、狗、帽子和杯子。如下图所示，这张带有猫的图片尺寸是400x248，带有RGB三通道，每个通道位宽是8位，所以这幅图片的原生数据个数是：400x248x3=297600，每个数据范围是0-255，图像分类的任务便是把这么多的数据输入，然后最终输出“猫”这个分类。</p>
+<p><strong>挑战</strong><br>虽然在这样一幅图中寻找一只猫这样的任务对人类而言很简单，但在技术那几视觉算法领域，其中包含的一些挑战和困难是值得去考虑的。下面罗列了一些存在的问题，需要记住的是，原生图像的表示是三维的，即RGB：</p>
+<ul>
+<li><strong>视角变化</strong> 同样的物体，由于相机位置的不同，造成了物体在图像中的方位不同。</li>
+<li><strong>伸缩变化</strong> 物体在图像中的尺寸可能和现实世界中分类好的物体尺寸不同</li>
+<li><strong>形变</strong> 许多物体的形状并不是刚性的，可能会有很极端的形变方式</li>
+<li><strong>光照条件</strong> 光照强度在像素级上的影响是很严重的，例如光照太强引起的过饱和</li>
+<li><strong>背景杂乱</strong> 物体可能会被混入背景，使得物体识别变得困难</li>
+<li><strong>内部分类的广泛</strong> 一些感兴趣的分类可能会很广泛，例如“椅子”这个分类，然而椅子的种类还有很多种，每一种的外观都不一样</li>
+</ul>
+<p>一个优秀的好的图像分类模型必须克服这些多样性带来的挑战，与此同时还要保持对内部分类的敏感性。</p>
+<h4 id="数据驱动的研究方法"><a href="#数据驱动的研究方法" class="headerlink" title="数据驱动的研究方法"></a>数据驱动的研究方法</h4><p>到底该怎么写一个能对图像进行分类的算法呢？比起其他普遍的算法，比如为一个数组进行排序，图像分类算法并不是那么显而易见。所以，我们采取的方式并不是在代码里直接能体现分类这个动作，而是像给你的孩子一台电脑，里面存放了各种类别的图像样本，然后教你孩子观察和学习这些图像样本，并对他们进行分类。当孩子学习一段时间过后，给他一幅图像，如果学习效果显著，那么他之后就能对新来的图像进行分类了。</p>
+<p>上面这样的方法也被称为<strong>数据驱动的研究方法</strong>，这样的方法很依赖被标注好分类的训练<strong>数据集</strong>积累，下图展示了数据集的大概面貌：<br><img src="http://7xopvd.com1.z0.glb.clouddn.com/trainset.jpg" alt="Alt text"></p>
+<p><strong>数据分类的流程</strong><br>从之前的介绍我们可以看出，图像分类所要做的事情便是将像素点输入，最后为其贴上一张分类标签，大致的流程可以用下面几项来描述：</p>
+<ul>
+<li><strong>输入： </strong>输入包含了N张图像，每一张带有一个正确的分类的标签，总共有K个不同的分类，这样的数据便称为<strong>训练集</strong></li>
+<li><strong>学习：</strong>我们的任务是利用这样的训练集去学习每一个样本属于哪个分类，这个过程也被称为<strong>训练分类器</strong>或者<strong>学习模型</strong></li>
+<li><strong>评估： </strong>最后，我们通过输入一个分类器从没接收过的新的图片集，然后验证此时的分类结果来验证分类器的可靠性和准确性。验证的手段一般是将分类器的预测结果和图像本身的正确分类进行比较，直观上看，我们希望看到的是预测大多结果都与正确的客观结果相符。</li>
+</ul>
+<h4 id="最近邻近分类器"><a href="#最近邻近分类器" class="headerlink" title="最近邻近分类器"></a>最近邻近分类器</h4><p>下面以<strong>最近邻近分类器</strong>作为数据驱动研究方法的第一个例子。虽然它和卷积神经网络（CNN）并不相关，而且在实际应用中几乎不被使用，但是通过它我们可以获取一些关于图像分类问题的基本实现方法。</p>
+<p>分类器采用的数据集：<a href="http://www.cs.toronto.edu/~kriz/cifar.html" target="_blank" rel="external">CIFAR-10</a></p>
+<p>CIFAR-10里面包含了60000张32x32图片，每一张图片都被标注了类别，例如飞机、汽车、鸟等共计10个分类。这6万张图片中，有50000张是训练集，10000张是测试集。在下面这幅示意图中，你可以看到来自于10个分类的，每个分类下10张随机图片：<br><img src="http://7xopvd.com1.z0.glb.clouddn.com/nn.jpg" alt="Alt text"></p>
+<p>最近邻近分类器是这样工作的，它从测试集选取了一张图片，并与训练集中的每一张去比较，然后预测和它最相近的训练图片的分类。从上面的右图可以看出，对于左侧的每一张测试图片，右边都给出的10张和它最相似的图片。但是需要注意的是，找出的这10张图片的分类并不一定和预期的相符，一般而言只有3张，例如第8行的马头，匹配得到的第一张红色的汽车则不是马这个分类。误匹配的原因可能是红车的图片背景也是黑色的。</p>
+<p>具体而言，比较的过程是基于像素级的，对于测试图片和训练图片而言，每张图片的像素个数是：32x32x3，将两幅图像的像素数据进行相减，结果取绝对值，得到差值图像，然后将插值图像里的像素数据再相加，作为衡量两幅图像相似程度的依据，过程如下图所示：</p>
+<p>[记得加图]</p>
+<p>如果将两幅图像的像素数据分别用两个一维向量$(I_1,I_2)$表示的话，它们间的差距可以用$L_1$距离来表示：$$L_1=|I_1-I_2|$$</p>
+<p>下面是最近邻近分类器的代码实现：<br><strong>1. </strong>载入CIFAR-10的数据，4个一维数组：训练图片、标签、测试图片、标签，$X_tr$代表的是来自训练样本的50000x32x32x3个像素点数据，$Y_tr$代表的是50000个训练样本的固有分类，范围是0-9：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Xtr, Ytr, Xte, Yte = load_CIFAR10(<span class="string">'data/cifar10/'</span>) <span class="comment"># a magic function we provide</span></div><div class="line"><span class="comment"># flatten out all images to be one-dimensional</span></div><div class="line">Xtr_rows = Xtr.reshape(Xtr.shape[<span class="number">0</span>], <span class="number">32</span> * <span class="number">32</span> * <span class="number">3</span>) <span class="comment"># Xtr_rows becomes 50000 x 3072</span></div><div class="line">Xte_rows = Xte.reshape(Xte.shape[<span class="number">0</span>], <span class="number">32</span> * <span class="number">32</span> * <span class="number">3</span>) <span class="comment"># Xte_rows becomes 10000 x 3072</span></div></pre></td></tr></table></figure>
+<p>有了数据，开始训练和评估我们的分类器：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">nn = NearestNeighbor() <span class="comment"># create a Nearest Neighbor classifier class</span></div><div class="line">nn.train(Xtr_rows, Ytr) <span class="comment"># train the classifier on the training images and labels</span></div><div class="line">Yte_predict = nn.predict(Xte_rows) <span class="comment"># predict labels on the test images</span></div><div class="line"><span class="comment"># and now print the classification accuracy, which is the average number</span></div><div class="line"><span class="comment"># of examples that are correctly predicted (i.e. label matches)</span></div><div class="line"><span class="keyword">print</span> <span class="string">'accuracy: %f'</span> % ( np.mean(Yte_predict == Yte) )</div></pre></td></tr></table></figure>
+<p>精度这个指标一般用来衡量评估结果豪华，它表示的是正确预测结果的百分比。</p>
+<p>$trrain(X,y)$函数两个参数：$X$是训练样本，$y$是样本的固有标签</p>
+<p>$predict(X))$函数一个参数：$X$是测试样本，返回的是测试结果标签</p>
+<p>分类器的用法介绍完了，下面是分类器实现的代码以及$L_1$距离的定义：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">NearestNeighbor</span><span class="params">(object)</span>:</span></div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">    <span class="keyword">pass</span></div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">train</span><span class="params">(self, X, y)</span>:</span></div><div class="line">    <span class="string">""" X is N x D where each row is an example. Y is 1-dimension of size N """</span></div><div class="line">    <span class="comment"># the nearest neighbor classifier simply remembers all the training data</span></div><div class="line">    self.Xtr = X</div><div class="line">    self.ytr = y</div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">predict</span><span class="params">(self, X)</span>:</span></div><div class="line">    <span class="string">""" X is N x D where each row is an example we wish to predict label for """</span></div><div class="line">    num_test = X.shape[<span class="number">0</span>]</div><div class="line">    <span class="comment"># lets make sure that the output type matches the input type</span></div><div class="line">    Ypred = np.zeros(num_test, dtype = self.ytr.dtype)</div><div class="line"></div><div class="line">    <span class="comment"># loop over all test rows</span></div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> xrange(num_test):</div><div class="line">      <span class="comment"># find the nearest training image to the i'th test image</span></div><div class="line">      <span class="comment"># using the L1 distance (sum of absolute value differences)</span></div><div class="line">      distances = np.sum(np.abs(self.Xtr - X[i,:]), axis = <span class="number">1</span>)</div><div class="line">      min_index = np.argmin(distances) <span class="comment"># get the index with smallest distance</span></div><div class="line">      Ypred[i] = self.ytr[min_index] <span class="comment"># predict the label of the nearest example</span></div><div class="line"></div><div class="line">    <span class="keyword">return</span> Ypred</div></pre></td></tr></table></figure>
+<p>用这个分类器跑CIFAR-10的数据，大概能达到38.6%的准确度，而随机猜测大概只能有10/100-10%的准确度。对于神经网络而言，大概能到95%的准确度，能与人脑相媲美</p>
+<p>对于距离计算选择，还有很多。</p>
+<p>（Lucien：第一天的学习总是告一段落了，第一章还是介绍了一些基本概念，读起来还是很轻松的，晚上还在实验室干了点活，perfect day！）</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+
+      
+        <div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode"></div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+  
+<nav id="article-nav">
+  
+  
+    <a href="/2016/12/06/hello-world-jaylucien/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Hello World</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="standford-image-cnn-lesson-1" data-title="斯坦福机器学习系列课程（一） 图像分类：数据驱动的研究方法" data-url="http://www.jaylucien.pw/2016/12/06/standford-image-cnn-lesson-1/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"true"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+
+
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2016 Jay Lucien
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    <script>
+	var yiliaConfig = {
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false,
+		root: "/",
+		innerArchive: true
+	}
+</script>
+
+<script src="/./main.js"></script>
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+    
+<div class="tools-col">
+  <ul class="btn-wrap">
+    
+      <li class="chose" data-hook="tools-section-all"><span class="text">全部</span><i class="icon-book"></i></li>
+    
+    
+      <li data-hook="tools-section-tag"><span class="text">标签</span><i class="icon-price-tags"></i></li>
+    
+    
+      <li data-hook="tools-section-friends"><span class="text">友链</span><i class="icon-link"></i></li>
+    
+    
+      <li data-hook="tools-section-me"><span class="text">我</span><i class="icon-smile"></i></li>
+    
+  </ul>
+  <div class="tools-wrap">
+    
+    	<section class="tools-section tools-section-all chose">
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-tag">
+    			<div class="widget tagcloud" id="js-tagcloud">
+    				
+    			</div>
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-friends">
+  		
+  			<div class="friends-wrap" id="js-friends">
+  			
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://litten.me/">Litten&#39;s Blog</a>
+  	        
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.ttmeiju.com/">娱乐-天天美剧</a>
+  	        
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://weavesilk.com/?odki">无聊-WaveSilk</a>
+  	        
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="https://500px.com/">摄影-500px</a>
+  	        
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="#">（待续）</a>
+  	        
+  	        </div>
+  		
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-me">
+  	  	
+  	  		<div class="aboutme-wrap" id="js-aboutme">11&#39;s FDUer&lt;br&gt;&lt;br&gt;生在彩云中&lt;br&gt;混迹于魔都</div>
+  	  	
+    	</section>
+    
+  </div>
+  
+</div>
+    <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+  </div>
+</body>
+</html>
