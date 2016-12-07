@@ -14,13 +14,16 @@
 <meta property="og:url" content="http://www.jaylucien.pw/2016/12/06/standford-image-cnn-lesson-1/index.html">
 <meta property="og:site_name" content="Lucien同学的窝">
 <meta property="og:description" content="斯坦福机器学习系列课程（一） 图像分类：数据驱动的研究方法图像分类概念将图像作为输入，然后从固定的分类集合中选择一个标签为其贴上，一般而言，一些突出的计算机视觉任务，例如物体检测、图像分割都可以转化成为图像分类任务。">
+<meta property="og:image" content="http://7xopvd.com1.z0.glb.clouddn.com/classify.png">
+<meta property="og:image" content="http://7xopvd.com1.z0.glb.clouddn.com/challenges.jpeg">
 <meta property="og:image" content="http://7xopvd.com1.z0.glb.clouddn.com/trainset.jpg">
 <meta property="og:image" content="http://7xopvd.com1.z0.glb.clouddn.com/nn.jpg">
-<meta property="og:updated_time" content="2016-12-06T15:49:52.987Z">
+<meta property="og:image" content="http://7xopvd.com1.z0.glb.clouddn.com/nneg.jpeg">
+<meta property="og:updated_time" content="2016-12-07T08:48:46.717Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="斯坦福机器学习系列课程（一） 图像分类：数据驱动的研究方法">
 <meta name="twitter:description" content="斯坦福机器学习系列课程（一） 图像分类：数据驱动的研究方法图像分类概念将图像作为输入，然后从固定的分类集合中选择一个标签为其贴上，一般而言，一些突出的计算机视觉任务，例如物体检测、图像分割都可以转化成为图像分类任务。">
-<meta name="twitter:image" content="http://7xopvd.com1.z0.glb.clouddn.com/trainset.jpg">
+<meta name="twitter:image" content="http://7xopvd.com1.z0.glb.clouddn.com/classify.png">
   
     <link rel="alternative" href="/atom.xml" title="Lucien同学的窝" type="application/atom+xml">
   
@@ -169,8 +172,10 @@
       
         <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=429482207&auto=0&height=66"></iframe>
 
-<h3 id="斯坦福机器学习系列课程（一）-图像分类：数据驱动的研究方法"><a href="#斯坦福机器学习系列课程（一）-图像分类：数据驱动的研究方法" class="headerlink" title="斯坦福机器学习系列课程（一） 图像分类：数据驱动的研究方法"></a>斯坦福机器学习系列课程（一） 图像分类：数据驱动的研究方法</h3><h4 id="图像分类"><a href="#图像分类" class="headerlink" title="图像分类"></a>图像分类</h4><p><strong>概念</strong><br>将图像作为输入，然后从固定的分类集合中选择一个标签为其贴上，一般而言，一些突出的计算机视觉任务，例如物体检测、图像分割都可以转化成为图像分类任务。<br><a id="more"></a></p>
+<h3 id="斯坦福机器学习系列课程（一）-图像分类：数据驱动的研究方法"><a href="#斯坦福机器学习系列课程（一）-图像分类：数据驱动的研究方法" class="headerlink" title="斯坦福机器学习系列课程（一） 图像分类：数据驱动的研究方法"></a>斯坦福机器学习系列课程（一） 图像分类：数据驱动的研究方法</h3><h4 id="图像分类"><a href="#图像分类" class="headerlink" title="图像分类"></a>图像分类</h4><p><strong>概念</strong><br>将图像作为输入，然后从固定的分类集合中选择一个标签为其贴上，一般而言，一些突出的计算机视觉任务，例如物体检测、图像分割都可以转化成为图像分类任务。</p>
+<a id="more"></a>
 <p><strong>举个栗子</strong><br>现在我有一幅图片，然后准备了4中分类标签：猫、狗、帽子和杯子。如下图所示，这张带有猫的图片尺寸是400x248，带有RGB三通道，每个通道位宽是8位，所以这幅图片的原生数据个数是：400x248x3=297600，每个数据范围是0-255，图像分类的任务便是把这么多的数据输入，然后最终输出“猫”这个分类。</p>
+<p><img src="http://7xopvd.com1.z0.glb.clouddn.com/classify.png" alt="All text"></p>
 <p><strong>挑战</strong><br>虽然在这样一幅图中寻找一只猫这样的任务对人类而言很简单，但在技术那几视觉算法领域，其中包含的一些挑战和困难是值得去考虑的。下面罗列了一些存在的问题，需要记住的是，原生图像的表示是三维的，即RGB：</p>
 <ul>
 <li><strong>视角变化</strong> 同样的物体，由于相机位置的不同，造成了物体在图像中的方位不同。</li>
@@ -180,6 +185,7 @@
 <li><strong>背景杂乱</strong> 物体可能会被混入背景，使得物体识别变得困难</li>
 <li><strong>内部分类的广泛</strong> 一些感兴趣的分类可能会很广泛，例如“椅子”这个分类，然而椅子的种类还有很多种，每一种的外观都不一样</li>
 </ul>
+<p><img src="http://7xopvd.com1.z0.glb.clouddn.com/challenges.jpeg" alt="All text"></p>
 <p>一个优秀的好的图像分类模型必须克服这些多样性带来的挑战，与此同时还要保持对内部分类的敏感性。</p>
 <h4 id="数据驱动的研究方法"><a href="#数据驱动的研究方法" class="headerlink" title="数据驱动的研究方法"></a>数据驱动的研究方法</h4><p>到底该怎么写一个能对图像进行分类的算法呢？比起其他普遍的算法，比如为一个数组进行排序，图像分类算法并不是那么显而易见。所以，我们采取的方式并不是在代码里直接能体现分类这个动作，而是像给你的孩子一台电脑，里面存放了各种类别的图像样本，然后教你孩子观察和学习这些图像样本，并对他们进行分类。当孩子学习一段时间过后，给他一幅图像，如果学习效果显著，那么他之后就能对新来的图像进行分类了。</p>
 <p>上面这样的方法也被称为<strong>数据驱动的研究方法</strong>，这样的方法很依赖被标注好分类的训练<strong>数据集</strong>积累，下图展示了数据集的大概面貌：<br><img src="http://7xopvd.com1.z0.glb.clouddn.com/trainset.jpg" alt="Alt text"></p>
@@ -194,13 +200,13 @@
 <p>CIFAR-10里面包含了60000张32x32图片，每一张图片都被标注了类别，例如飞机、汽车、鸟等共计10个分类。这6万张图片中，有50000张是训练集，10000张是测试集。在下面这幅示意图中，你可以看到来自于10个分类的，每个分类下10张随机图片：<br><img src="http://7xopvd.com1.z0.glb.clouddn.com/nn.jpg" alt="Alt text"></p>
 <p>最近邻近分类器是这样工作的，它从测试集选取了一张图片，并与训练集中的每一张去比较，然后预测和它最相近的训练图片的分类。从上面的右图可以看出，对于左侧的每一张测试图片，右边都给出的10张和它最相似的图片。但是需要注意的是，找出的这10张图片的分类并不一定和预期的相符，一般而言只有3张，例如第8行的马头，匹配得到的第一张红色的汽车则不是马这个分类。误匹配的原因可能是红车的图片背景也是黑色的。</p>
 <p>具体而言，比较的过程是基于像素级的，对于测试图片和训练图片而言，每张图片的像素个数是：32x32x3，将两幅图像的像素数据进行相减，结果取绝对值，得到差值图像，然后将插值图像里的像素数据再相加，作为衡量两幅图像相似程度的依据，过程如下图所示：</p>
-<p>[记得加图]</p>
+<p><img src="http://7xopvd.com1.z0.glb.clouddn.com/nneg.jpeg" alt="All text"></p>
 <p>如果将两幅图像的像素数据分别用两个一维向量$(I_1,I_2)$表示的话，它们间的差距可以用$L_1$距离来表示：$$L_1=|I_1-I_2|$$</p>
 <p>下面是最近邻近分类器的代码实现：<br><strong>1. </strong>载入CIFAR-10的数据，4个一维数组：训练图片、标签、测试图片、标签，$X_tr$代表的是来自训练样本的50000x32x32x3个像素点数据，$Y_tr$代表的是50000个训练样本的固有分类，范围是0-9：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Xtr, Ytr, Xte, Yte = load_CIFAR10(<span class="string">'data/cifar10/'</span>) <span class="comment"># a magic function we provide</span></div><div class="line"><span class="comment"># flatten out all images to be one-dimensional</span></div><div class="line">Xtr_rows = Xtr.reshape(Xtr.shape[<span class="number">0</span>], <span class="number">32</span> * <span class="number">32</span> * <span class="number">3</span>) <span class="comment"># Xtr_rows becomes 50000 x 3072</span></div><div class="line">Xte_rows = Xte.reshape(Xte.shape[<span class="number">0</span>], <span class="number">32</span> * <span class="number">32</span> * <span class="number">3</span>) <span class="comment"># Xte_rows becomes 10000 x 3072</span></div></pre></td></tr></table></figure>
-<p>有了数据，开始训练和评估我们的分类器：</p>
+<p><strong>2. </strong>有了数据，开始训练和评估我们的分类器：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">nn = NearestNeighbor() <span class="comment"># create a Nearest Neighbor classifier class</span></div><div class="line">nn.train(Xtr_rows, Ytr) <span class="comment"># train the classifier on the training images and labels</span></div><div class="line">Yte_predict = nn.predict(Xte_rows) <span class="comment"># predict labels on the test images</span></div><div class="line"><span class="comment"># and now print the classification accuracy, which is the average number</span></div><div class="line"><span class="comment"># of examples that are correctly predicted (i.e. label matches)</span></div><div class="line"><span class="keyword">print</span> <span class="string">'accuracy: %f'</span> % ( np.mean(Yte_predict == Yte) )</div></pre></td></tr></table></figure>
-<p>精度这个指标一般用来衡量评估结果豪华，它表示的是正确预测结果的百分比。</p>
+<p>精度这个指标一般用来衡量评估结果的好坏，它表示的是正确预测结果的百分比。</p>
 <p>$trrain(X,y)$函数两个参数：$X$是训练样本，$y$是样本的固有标签</p>
 <p>$predict(X))$函数一个参数：$X$是测试样本，返回的是测试结果标签</p>
 <p>分类器的用法介绍完了，下面是分类器实现的代码以及$L_1$距离的定义：</p>
